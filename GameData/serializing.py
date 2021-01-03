@@ -1,4 +1,4 @@
-from typing import Union, Optional, Dict, List, Set
+from typing import Union, Optional, Dict, List, Set, Tuple
 
 
 class ItemNotConnectedError(Exception):
@@ -13,18 +13,34 @@ class UnknownItemTypeError(Exception):
     pass
 
 
+class SerializeSpaceError(Exception):
+    pass
+
+
+class DeserializeError(Exception):
+    pass
+
+
 class SerializeSpace:
     def __init__(self):
+        self.des_dict: dict = {}
+        self.type_list: Union[Dict[str, type], List[type], Tuple[type], Set[type]] = []
+        self.ref: list = []
         self.memory: List["Item"] = []
         self.main: Set[int] = set()
+        self.is_serializing = True
 
     def add_element(self, element: "Item") -> int:
+        if not self.is_serializing:
+            raise SerializeSpaceError("This SerializeSpace is setup to deserialize no serialize")
         r = self.add_attribute(element)
         self.main.add(len(self.memory)-1)
         element.connect(self)
         return r
 
     def add_attribute(self, atr: "Item") -> int:
+        if not self.is_serializing:
+            raise SerializeSpaceError("This SerializeSpace is setup to deserialize no serialize")
         for i in range(len(self.memory)):
             if self.memory[i].obj is atr.obj:
                 return i
@@ -32,15 +48,35 @@ class SerializeSpace:
         return len(self.memory) - 1
 
     def get_attribute(self, i: int) -> "Item":
+        if not self.is_serializing:
+            raise SerializeSpaceError("This SerializeSpace is setup to deserialize no serialize")
         if i not in self.memory:
             raise NonExistingObjectInMemoryError
         return self.memory[i]
 
     def serialize(self):
+        if not self.is_serializing:
+            raise SerializeSpaceError("This SerializeSpace is setup to deserializing not serializing")
         ref = []
         for i in range(len(self.memory)):
             ref.append(self.memory[i].serialize())
         return {"main": self.main, "references": ref}
+
+    def deserialize(self, dct: dict, type_list: Union[Dict[str, type], List[type], Tuple[type], Set[type]]):
+        self.is_serializing = False
+        self.des_dict = dct
+        self.type_list = type_list
+        if "main" not in dct or not isinstance(dct["main"], list):
+            raise DeserializeError("Invalid deserialize protocol: invalid 'main' data.")
+        self.main = self.des_dict["main"]
+        if "references" not in dct or not isinstance(dct["references"], list):
+            raise DeserializeError("Invalid deserialize protocol: invalid 'references' data.")
+        self.ref = dct["references"]
+
+    def convert_item(self, item):
+        if self.is_serializing:
+            raise SerializeSpaceError("This SerializeSpace is setup to serializing not deserializing")
+
 
 
 class Item:
@@ -116,6 +152,16 @@ class Item:
     def is_const(cls, obj: object) -> bool:
         return isinstance(obj, tuple)
 
+
+def serialize(*obj: tuple):
+    space = SerializeSpace()
+    for e in obj:
+        space.add_element(Item(e))
+    return space.serialize()
+
+
+def deserialize(dct: dict, type_list: Union[Dict[str, type], List[type], Tuple[type], Set[type]]):
+    pass
 # class SerializeSpace:
 #     def __init__(self):
 #         self.references: List["Item"] = []
