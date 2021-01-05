@@ -1,4 +1,4 @@
-import counter
+from Tools import counter
 
 
 class Skills:
