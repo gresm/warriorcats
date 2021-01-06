@@ -17,7 +17,7 @@ class Counter:
         self.count = self.min
 
     def move_by(self, steps: int):
-        if self.min <= self.count + steps <= self.max:
+        if (self.min <= self.count + steps or self.min == -1) and (self.count + steps <= self.max or self.max == -1):
             self.count += steps
             return self.count
         raise CounterOutOfRangeError
@@ -54,7 +54,8 @@ class LinkedCounters:
         return s
 
     def validate(self, add_val: int):
-        if not self.min <= self.get_sum() + add_val <= self.max:
+        if not ((self.min == -1 or self.min <= self.get_sum() + add_val) and (self.max == -1 or
+                                                                              self.get_sum() + add_val <= self.max)):
             raise LinkedCountersOutOfTotalRangeError
         return
 
