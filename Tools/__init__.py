@@ -1,7 +1,14 @@
-from .counter import *
-from .serializing import *
-from board2d import *
+from . import counter
+from . import serializing
+from . import board2d
+from . import types_protocol
+
+from generate_init import generate, insert
 
 
-classes = (Counter, LinkedCounter, LinkedCounters, SerializeSpace, Item, Field2d, InvulnerableField2D, Board2dType,
-           Board2d)
+# generate __all__ and classes
+__all__, objects,  classes = generate(counter, serializing, board2d, types_protocol)
+insert(globals(), __all__, objects)
+
+# cleanup
+del generate, insert, objects

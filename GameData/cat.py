@@ -2,10 +2,31 @@ from Tools import counter as c
 
 
 class Cat:
-    def __init__(self, skills: "Skills", name, clan: "Clan" = None):
-        self.skills = skills
-        self.name = name
+    def __init__(self, skills: "Skills", name: "Name", clan: "Clan" = None):
+        self.skills: "Skills" = skills
+        self.name: Name = name
+        self.clan: "Clan" = clan
+
+    def join_clan(self, clan: "Clan"):
         self.clan = clan
+
+    def get_name(self) -> str:
+        return str(self.name)
+
+    def __hash__(self):
+        return super(Cat, self).__hash__()
+
+    def __eq__(self, other):
+        return self is other
+
+
+class Name:
+    def __init__(self, first_name: str, prefix: str):
+        self.first_name = first_name
+        self.prefix = prefix
+
+    def __str__(self):
+        return f"{self.first_name} {self.prefix}"
 
 
 class Skills:
@@ -32,3 +53,6 @@ class Clan:
         self.herbs = c.Counter(0, -1)
         self.prey = c.Counter(0, -1)
         self.cats = {}
+
+    def add_cat(self, cat: Cat):
+        self.cats[cat.get_name()] = cat
