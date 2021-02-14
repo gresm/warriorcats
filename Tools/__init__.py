@@ -8,7 +8,7 @@ from generate_init import generate, insert
 
 
 # generate __all__ and classes
-__all__, objects,  classes = generate(counter, serializing, board2d, types_checker, virtual_object)
+__all__, objects,  __classes__ = generate(counter, serializing, board2d, types_checker, virtual_object)
 insert(globals(), __all__, objects)
 
 # cleanup
