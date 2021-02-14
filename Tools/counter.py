@@ -32,6 +32,13 @@ class Counter:
         self.count = self.min
         return self.count
 
+    def end(self):
+        self.count = self.max
+        return self.count
+
+    def get(self):
+        return self.count
+
     def set_pos(self, pos: int):
         if self.min <= pos <= self.max:
             self.count = pos

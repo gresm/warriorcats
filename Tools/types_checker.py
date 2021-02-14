@@ -1,6 +1,7 @@
 from typing import Union, List, Tuple, Set, Iterable, Optional
 
 _TYPE = Union["Node", type]
+_OBJECT_TYPE = Union["ObjectTypeNode", object]
 
 
 class Node:
@@ -21,6 +22,71 @@ class Node:
 
     def check(self, obj: object) -> bool:
         return self._check(obj, self.type)
+
+
+class SubClassNode(Node):
+    def __init__(self, t: type, *args: type):
+        super(Node, self).__init__()
+        self.type: type = t
+        self.args = args
+
+    @staticmethod
+    def _check(t: type, t2: Union[type, Tuple[type]]) -> bool:
+        if isinstance(t, type):
+            return issubclass(t, t2)
+        return False
+
+    def check(self, t: type) -> bool:
+        a = list(self.args)
+        a.append(self.type)
+        a = tuple(a)
+        return self._check(t, a)
+
+
+class ObjectTypeNode(Node):
+    def __init__(self, o: _OBJECT_TYPE):
+        super(Node, self).__init__()
+        self.object: _OBJECT_TYPE = o
+
+    @staticmethod
+    def _check(obj: object, node: Union[_OBJECT_TYPE, Node]) -> bool:
+        if isinstance(node, ObjectTypeNode):
+            return node.check(obj)
+        elif isinstance(node, Node):
+            return node.check(obj)
+        else:
+            return obj is node
+
+    def check(self, obj: object) -> bool:
+        return self._check(obj, self.object)
+
+
+class UnionObjectNode(ObjectTypeNode):
+    def __init__(self, o: _OBJECT_TYPE, o2: _OBJECT_TYPE, *args: _OBJECT_TYPE):
+        super().__init__(o)
+        self.object2: _OBJECT_TYPE = o2
+        self.args: Tuple[_OBJECT_TYPE] = args
+
+    def check(self, obj: object) -> bool:
+        f = self._check(obj, self.object) or self._check(obj, self.object2)
+        if not self.args:
+            return f
+        else:
+            for e in self.args:
+                if self._check(obj, e):
+                    return True
+            return f
+
+
+class SelectedNode(ObjectTypeNode):
+    def __init__(self, t: _OBJECT_TYPE, t2: _OBJECT_TYPE, *args: _OBJECT_TYPE):
+        super(SelectedNode, self).__init__(t)
+        self.type = t
+        self.type2: _OBJECT_TYPE = t2
+        self.args: Tuple[_OBJECT_TYPE] = args
+
+    def check(self, obj: object) -> bool:
+        return obj in (self.type, self.type2, *self.args)
 
 
 class AnyNode(Node):
@@ -129,17 +195,6 @@ class UnionNode(Node):
             return f
 
 
-class SelectedNode(Node):
-    def __init__(self, t: object, t2: object, *args: object):
-        super(object, self).__init__()
-        self.type = t
-        self.type2: object = t2
-        self.args: Tuple[object] = args
-
-    def check(self, obj: object) -> bool:
-        return obj in (self.type, self.type2, *self.args)
-
-
 class AllNode(Node):
     def __init__(self, t: _TYPE, *args: _TYPE):
         super().__init__(t)
@@ -153,3 +208,8 @@ class AllNode(Node):
             if not self._check(obj, e):
                 return False
         return True
+
+
+class ObjectNode(ObjectTypeNode):
+    def __init__(self, t: _OBJECT_TYPE):
+        super().__init__(t)
