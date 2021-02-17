@@ -12,7 +12,8 @@ class App:
         self.max_tps = 20
         self.running = True
         self.bg_color = (0, 0, 0)
-        pygame.display.set_icon(pygame.image.load(icon_path))
+        icon = pygame.image.load(icon_path)
+        pygame.display.set_icon(icon)
         pygame.display.set_caption(title)
         self.draw()
 

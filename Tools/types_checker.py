@@ -15,10 +15,7 @@ class Node:
     def _check(obj: object, t: _TYPE) -> bool:
         if isinstance(t, Node):
             return t.check(obj)
-        if isinstance(obj, t):
-            return True
-        else:
-            return False
+        return isinstance(obj, t)
 
     def check(self, obj: object) -> bool:
         return self._check(obj, self.type)
@@ -34,7 +31,8 @@ class SubClassNode(Node):
     def _check(t: type, t2: Union[type, Tuple[type]]) -> bool:
         if isinstance(t, type):
             return issubclass(t, t2)
-        return False
+        else:
+            return False
 
     def check(self, t: type) -> bool:
         a = list(self.args)
