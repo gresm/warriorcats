@@ -1,24 +1,25 @@
-import pygame
 from pygame.mixer import music
-
-pygame.init()
 
 
 class Sound:
 
     def __init__(self, sound_path):
         self.soundPath = sound_path
-        self.misc = music.load(self.soundPath)
-        self.__stopped = False
+        music.load(self.soundPath)
+        self._stopped = False
 
     @property
     def stopped(self):
-        return self.__stopped
+        return self._stopped
+
+    @stopped.setter
+    def stopped(self, val):
+        self._stopped = val
 
     def play(self):
         self.__stopped = False
         self.misc.play()
 
     def stop(self):
-        self.misc.stop()
-        self.__stopped = True
+        music.stop()
+        self._stopped = True

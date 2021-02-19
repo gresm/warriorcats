@@ -4,7 +4,7 @@ import pygame
 pygame.init()
 
 
-class App:
+class BaseApp:
     def __init__(self, title="my game", icon_path: str = "./images/icon.png", height: int = 300, width: int = 300,
                  bg_color: Tuple[int, int, int] = (0, 0, 0)):
         self.screen = pygame.display.set_mode((height, width))
@@ -106,7 +106,17 @@ class App:
         pass
 
     def on_key_down(self, key_code: int):
+        """
+        To override.
+        :param key_code: int
+        :return: None
+        """
         pass
 
     def on_key_up(self, key_code: int):
+        """
+        To override.
+        :param key_code: int
+        :return: None
+        """
         pass

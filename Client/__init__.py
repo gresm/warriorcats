@@ -1,7 +1,7 @@
 from . import pygame_app as app
 
 
-class Game(app.App):
+class Game(app.BaseApp):
     pass
 
 
