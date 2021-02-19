@@ -81,10 +81,3 @@ class Cat:
         self.stats = stats
         self.clan = clan
         clan.add_cat(self)
-
-# x x x x x
-# x x x x x
-# x x x x x
-# x x x x x
-# x x x x x
-# x x x x x

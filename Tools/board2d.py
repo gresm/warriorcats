@@ -117,75 +117,10 @@ class Field2D:
         self.y_pos = y_pos
         self.x_pos = x_pos
 
-class Board2dOverRangeError(Exception):
-    pass
 
 class Board2D:
     def __init__(self, size_x: int, size_y: int):
         self.board: List[List] = [[Field2D(x, y, self) for x in range(size_x)] for y in range(size_y)]
 
-class Board2d:
-    def __init__(self, x_size: int, y_size: int, board_type: Board2dType = Board2dType.square,
-                 field_class: Optional[Type[Field2d]] = None, default_args: Optional[tuple] = None,
-                 default_kwargs: Optional[dict] = None):
-        self.x_size = x_size
-        self.y_size = y_size
-        self.board_type: Board2dType = board_type
-        self.default_field_class: Type[Field2d]
-        if not field_class:
-            self.default_field_class = Field2d
-        elif issubclass(field_class, Field2d):
-            self.default_field_class = field_class
-        else:
-            raise ValueError("field_class must be")
-        self.default_args: tuple
-        if default_args:
-            self.default_args = default_args
-        else:
-            self.default_args = ()
-        self.default_kwargs: dict
-        if default_kwargs:
-            self.default_kwargs = default_kwargs
-        else:
-            self.default_kwargs = {}
-        self.board = self.generate_board()
-
-    def generate_board(self) -> List[List[Field2d]]:
-        new_board: List[List[Field2d]] = []
-        for x in range(self.x_size):
-            new_line = []
-            for y in range(self.y_size):
-                obj = self.default_field_class.__new__(self.default_field_class)
-                obj.__init__(x, y, None, self)
-                new_line.append(obj)
-            new_board.append(new_line)
-        return new_board
-
-    def is_in_range(self, x_pos: int, y_pos: int) -> bool:
-        return self.x_size >= x_pos > 0 and self.y_size >= y_pos > 0
-
-    def get_field(self, x_pos: int, y_pos: int) -> Field2d:
-        if self.is_in_range(x_pos, y_pos):
-            return self.board[x_pos-1][y_pos-1]
-        elif self.board_type == Board2dType.square:
-            raise Board2dOverRangeError
-        elif self.board_type == Board2dType.torus:
-            return self.get_field((x_pos % self.x_size) + 1, (y_pos % self.y_size) + 1)
-        elif self.board_type == Board2dType.fake_inf:
-            obj = self.default_field_class.__new__(self.default_field_class)
-            obj.__init__(x_pos, y_pos, None, self)
-            return obj
-        else:
-            raise ValueError("Invalid board_type")
-
-    def set_field(self, x_pos: int, y_pos: int, obj: object):
-        if self.is_in_range(x_pos, y_pos):
-            self.board[x_pos][y_pos].set_obj(obj)
-        elif self.board_type == Board2dType.square:
-            raise Board2dOverRangeError
-        elif self.board_type == Board2dType.torus:
-            self.set_field((x_pos % self.x_size) + 1, (y_pos % self.y_size) + 1, obj)
-        elif self.board_type == Board2dType.fake_inf:
-            pass
-        else:
-            raise ValueError("Invalid board_type")
+    def __getitem__(self, xy):
+        return self.board[xy[0]][xy[1]]
