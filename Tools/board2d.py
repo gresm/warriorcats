@@ -110,31 +110,19 @@ class Vector2:
     def __add__(self, other: "Vector2"):
         return Vector2(self.x + other.x, self.y + other.y)
 
-class Field2d:
-    def __init__(self, x_pos: int, y_pos, obj: object, board: "Board2d"):
+
+class Field2D:
+    def __init__(self, x_pos: int, y_pos: int, board: "Board2D"):
+        self.board = board
         self.y_pos = y_pos
         self.x_pos = x_pos
-        self.obj = obj
-        self.board = board
-
-    def set_obj(self, new_obj: object):
-        self.obj = new_obj
-
-
-class InvulnerableField2D(Field2d):
-    def __setattr__(self, key, value):
-        pass
-
-
-class Board2dType(Enum):
-    square = 0
-    fake_inf = 1
-    torus = 2
-
 
 class Board2dOverRangeError(Exception):
     pass
 
+class Board2D:
+    def __init__(self, size_x: int, size_y: int):
+        self.board: List[List] = [[Field2D(x, y, self) for x in range(size_x)] for y in range(size_y)]
 
 class Board2d:
     def __init__(self, x_size: int, y_size: int, board_type: Board2dType = Board2dType.square,

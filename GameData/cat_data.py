@@ -1,4 +1,5 @@
 from Tools import counter
+from typing import Dict
 
 
 class Health:
