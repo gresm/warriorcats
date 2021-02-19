@@ -1,5 +1,5 @@
 from . import cat_data
-from Tools.generate_init import generate, insert
+from generate_init import generate, insert
 
 
 __all__, objects, __classes__ = generate(cat_data)

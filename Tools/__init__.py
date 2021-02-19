@@ -4,7 +4,7 @@ from . import board2d
 from . import types_checker
 from . import virtual_object
 
-from Tools.generate_init import generate, insert
+from generate_init import generate, insert
 
 
 # generate __all__ and classes
