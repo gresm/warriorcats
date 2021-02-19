@@ -165,13 +165,13 @@ class Clan:
     def get_cat(self, cat_name: Name) -> Cat:
         if cat_name in self.cats:
             return self.cats[cat_name]
-        raise CatSearchingError
+        raise CatSearchingError("Cat not found")
 
     def get_cat_by_name(self, cat_str_name: str) -> Cat:
         for e in self.cats:
             if str(e) == cat_str_name:
                 return self.cats[e]
-        raise CatSearchingError
+        raise CatSearchingError("Cat not found")
 
     def on_cat_joining(self, cat: Cat):
         self._check_editing()
@@ -190,7 +190,7 @@ class Game:
     instance: "Game" = None
 
     def __init__(self):
-        self.instance = self
+        self.instance = self.instance or self
         self.clans: Dict[str, Clan] = {}
 
     def add_clan(self, clan: Clan):

@@ -66,10 +66,10 @@ def serialize(obj):
         n = obj.__class__.__name__
         d = obj.__dict__.copy()
         r = {}
-        ig = "__serialize_ignore__" in d
-        ig_lst = {}
-        if ig:
+        if ig := "__serialize_ignore__" in d:
             ig_lst = d["__serialize_ignore__"]
+        else:
+            ig_lst = {}
 
         for i, v in d.items():
             if not ig or i not in ig_lst:
@@ -92,4 +92,5 @@ def deserialize(dct: dict, classes: Dict[str, Type[object]]):
     else:
         if is_dict(dct) and "__class__" in dct and dct["__class__"] == "set":
             return set(dct)
-        return dct
+        else:
+            return dct

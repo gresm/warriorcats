@@ -20,7 +20,8 @@ class Counter:
         if (self.min <= self.count + steps or self.min == -1) and (self.count + steps <= self.max or self.max == -1):
             self.count += steps
             return self.count
-        raise CounterOutOfRangeError
+        else:
+            raise CounterOutOfRangeError()
 
     def step(self):
         return self.move_by(1)
@@ -43,7 +44,7 @@ class Counter:
         if self.min <= pos <= self.max:
             self.count = pos
             return self.count
-        raise CounterOutOfRangeError
+        raise CounterOutOfRangeError()
 
 
 class LinkedCounters:
@@ -61,20 +62,23 @@ class LinkedCounters:
         return s
 
     def validate(self, add_val: int):
-        if not ((self.min == -1 or self.min <= self.get_sum() + add_val) and (self.max == -1 or
+        if not (((self.min == -1) or self.min <= self.get_sum() + add_val) and (self.max == -1 or
                                                                               self.get_sum() + add_val <= self.max)):
-            raise LinkedCountersOutOfTotalRangeError
-        return
+            raise LinkedCountersOutOfTotalRangeError()
+        else:
+            return
 
     def get_counter(self, counter_id):
         if counter_id in self.counters:
             return LinkedCounter(counter_id, self)
-        return None
+        else:
+            return None
 
     def _get_counter(self, counter_id):
         if counter_id in self.counters:
             return self.counters[counter_id]
-        return None
+        else:
+            return None
 
     def set_counter(self, counter_id, counter: Counter):
         self.counters[counter_id] = counter

@@ -52,7 +52,7 @@ class SerializeSpace:
         if not self.is_serializing:
             raise SerializeSpaceError("This SerializeSpace is setup to deserialize no serialize")
         if i not in self.memory:
-            raise NonExistingObjectInMemoryError
+            raise NonExistingObjectInMemoryError()
         return self.memory[i]
 
     def get_classes(self) -> Set[Type[type]]:
@@ -162,7 +162,7 @@ class Item:
 
     def setup(self):
         if not self.connected:
-            raise ItemNotConnectedError
+            raise ItemNotConnectedError()
         if self.class_type == "simple":
             self.memory = self.obj
         elif self.class_type == "iterable" or self.class_type == "set":
@@ -187,11 +187,11 @@ class Item:
                 new_m[i] = self.space.add_attribute(it)
             self.memory = new_m
         else:
-            raise UnknownItemTypeError
+            raise UnknownItemTypeError()
 
     def add_attribute(self, atr: "Item"):
         if not self.connected:
-            raise ItemNotConnectedError
+            raise ItemNotConnectedError()
         return self.space.add_attribute(atr)
 
     def serialize(self):
