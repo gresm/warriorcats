@@ -2,7 +2,6 @@ from typing import Optional, Type, List
 from enum import Enum
 
 
-
 class Field2d:
     def __init__(self, x_pos: int, y_pos, obj: object, board: "Board2d"):
         self.y_pos = y_pos
@@ -27,7 +26,6 @@ class Board2dType(Enum):
 
 class Board2dOverRangeError(Exception):
     pass
-
 
 
 class Board2d:

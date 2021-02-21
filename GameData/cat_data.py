@@ -72,7 +72,11 @@ class Clan:
 
     def add_cat(self, cat: "Cat"):
         self.cats[cat.name] = cat
+        cat.clan._del_cat(cat)
         cat.clan = self
+
+    def _del_cat(self, cat):
+        del self.cats[cat.name]
 
 
 class Cat:
