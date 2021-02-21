@@ -4,7 +4,6 @@ from enum import Enum
 import copy
 
 
-# TODO: end this file
 class GameError(Exception):
     pass
 

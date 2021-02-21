@@ -1,4 +1,4 @@
-from typing import List
+from typing import Optional, Dict
 
 
 class Vector2:
