@@ -1,9 +1,13 @@
 from Tools import csvH as csv
+from typing import Dict
 
-WALL = "#"
-GRASS = "_"
-WATER = "-"
-NOTHING = "="
+
+data: Dict[str, str] = {
+    "WALL": "#",
+    "GRASS": "_",
+    "WATER": "-",
+    "NONE": "="
+}
 
 
 def csv_to_board(file_path):

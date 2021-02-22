@@ -4,6 +4,7 @@ from pygame.mixer import music
 class Sound:
 
     def __init__(self, sound_path):
+        self.__stopped = False
         self.soundPath = sound_path
         music.load(self.soundPath)
         self._stopped = False
@@ -18,7 +19,7 @@ class Sound:
 
     def play(self):
         self.__stopped = False
-        self.misc.play()
+        music.play()
 
     def stop(self):
         music.stop()
