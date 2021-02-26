@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from Tools import board2d as b2
 from . import cat_data as cd
 from enum import Enum
@@ -25,7 +25,7 @@ class GameFieldData(b2.FieldData):
     def _exit(self, cat):
         del self.cats[cat.name]
 
-    def cat_enter(self, cat: cd.Cat, enter_dir: EnteringDirection) -> bool:
+    def enter(self, cat: cd.Cat, enter_dir: EnteringDirection) -> bool:
         if self.can_enter(cat, enter_dir):
             self._enter(cat)
             return True
@@ -46,16 +46,24 @@ class GameFieldData(b2.FieldData):
 # types of Fields:
 # Camp, Hunting, Den, Medic Den
 
-
 class CampField(GameFieldData):
+
+    def __init__(self, walls):
+        super(CampField, self).__init__()
+        self.walls: List[bool] = walls
+
     def can_enter(self, cat: cd.Cat, enter_dir: EnteringDirection) -> bool:
-        ...
+        if self.clan_bel and self.clan_bel is cat.clan and self.walls[enter_dir]:
+            return True
+        elif not self.protected_by:
+            return True
+        return False
 
 
 class HuntingField(GameFieldData):
 
-    def hunt(self):
-        pass
+    def hunt(self, cat):
+        ...
 
     def can_enter(self, cat: cd.Cat, enter_dir: EnteringDirection) -> bool:
         ...
@@ -65,5 +73,5 @@ class DenField(GameFieldData):
     pass
 
 
-class MedicDenField(GameFieldData):
+class MedicDenField(DenField):
     pass

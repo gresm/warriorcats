@@ -1,5 +1,6 @@
 from Tools import counter
 from typing import Dict
+from fields import HuntingField
 
 
 class Health:
@@ -27,19 +28,6 @@ class Health:
         self.update()
         if self.alive:
             self.health.back()
-
-
-# class BaseSkill:
-#
-#     def __init__(self):
-#         self.level = 0
-##
-# class Hunting(BaseSkill):
-#     pass
-#
-#
-# class Fighting(BaseSkill):
-#     pass
 
 
 class Stats:
@@ -85,3 +73,6 @@ class Cat:
         self.stats = stats
         self.clan = clan
         clan.add_cat(self)
+
+    def hunt(self, filed: HuntingField):
+        filed.hunt(self)
