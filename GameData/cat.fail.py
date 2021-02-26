@@ -12,6 +12,12 @@ class CatSearchingError(GameError):
     pass
 
 
+class FrozenError(GameError):
+
+    def __init__(self, type_of):
+        super(FrozenError, self).__init__(self, f"This {type_of} is frozen")
+
+
 class CatGender(Enum):
     male = 0
     female = 1
@@ -27,7 +33,7 @@ class Cat:
 
     def _check_editing(self):
         if self.is_frozen:
-            raise GameError("This cat is frozen")
+            raise FrozenError("cat")
 
     def freeze(self):
         self._check_editing()
@@ -112,7 +118,7 @@ class Skills:
         self.fighting: c.LinkedCounter = self.stats.set_counter("fighting", c.Counter(0, self.max_fighting))
         self.hunting: c.LinkedCounter = self.stats.set_counter("hunting", c.Counter(0, self.max_hunting))
 
-    def update(self):
+    def reset(self):
         self.health = c.Counter(0, self.max_health)
         self.stats = c.LinkedCounters(0, self.max_stat_points)
         self.fighting = self.stats.set_counter("fighting", c.Counter(0, self.max_fighting))
@@ -148,7 +154,7 @@ class Clan:
 
     def _check_editing(self):
         if self.is_frozen:
-            raise GameError("This clan is frozen")
+            raise FrozenError("clan")
 
     def freeze(self):
         self.is_frozen = True
