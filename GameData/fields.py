@@ -1,3 +1,4 @@
+import random
 from typing import Dict, Optional, List
 from Tools import board2d as b2
 from . import cat_data as cd
@@ -31,7 +32,6 @@ class GameFieldData(b2.FieldData):
             return True
         return False
 
-    # noinspection PyUnusedLocal
     def can_enter(self, cat: cd.Cat, enter_dir: EnteringDirection) -> bool:
         if self.clan_bel and self.clan_bel is cat.clan:
             return True
@@ -53,7 +53,7 @@ class CampField(GameFieldData):
         self.walls: List[bool] = walls
 
     def can_enter(self, cat: cd.Cat, enter_dir: EnteringDirection) -> bool:
-        if self.clan_bel and self.clan_bel is cat.clan and self.walls[enter_dir]:
+        if self.clan_bel and self.clan_bel is cat.clan and self.walls[enter_dir.value]:
             return True
         elif not self.protected_by:
             return True
@@ -62,16 +62,19 @@ class CampField(GameFieldData):
 
 class HuntingField(GameFieldData):
 
-    def hunt(self, cat):
-        ...
+    @staticmethod
+    def hunt(cat: cd.Cat):
+        cat.stats.hunting.move_by(random.randint(1, 3))
 
     def can_enter(self, cat: cd.Cat, enter_dir: EnteringDirection) -> bool:
-        ...
+        return True
 
 
+# TODO
 class DenField(GameFieldData):
     pass
 
 
+# TODO
 class MedicDenField(DenField):
     pass
